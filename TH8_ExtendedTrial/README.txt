@@ -1,4 +1,4 @@
-Touhou 8 Imperishable Night: Extended Trial v0.01
+Touhou 8 Imperishable Night: Extended Trial v0.02
 Patch Author: zero318
 Credit to ExpHP, Priw, dassdude, and everyone else on ZUNcode who pointed me towards documentation, previously made the documentation, or otherwise humored my millions of questions making this.
 
@@ -118,3 +118,12 @@ TODO:
 -Sleep?
 -Rewrite the patch to use codecaves instead of so many raw binhacks?
 -Undoubtedly 10 other things I forgot
+-Like the time item point value difference
+
+Changelog:
+
+0.01:
+-Patch exists
+
+0.02:
+-Attempted to fix a bug where TIME_THRES_MET was returning your current time orb count instead of which threshold had been met because I forgot a MOV EAX,EDX
