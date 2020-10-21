@@ -128,6 +128,9 @@ TODO:
 IN PROGRESS:
 -Rewrite the patch to use codecaves instead of so many raw binhacks
 
+Known Bugs:
+-Autobomb isn't actually using all the bomb stocks. Cause uncertain.
+
 Changelog:
 
 0.01:
