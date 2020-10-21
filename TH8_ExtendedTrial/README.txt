@@ -1,10 +1,13 @@
-Touhou 8 Imperishable Night: Extended Trial v0.02
+Touhou 8 Imperishable Night: Extended Trial v0.03
 Patch Author: zero318
 Credit to ExpHP, Priw, dassdude, and everyone else on ZUNcode who pointed me towards documentation, previously made the documentation, or otherwise humored my millions of questions making this.
 
 Documentation/FAQs/Changelog
 
 This patch is intended to port as many features of the old IN trials as possible to the final version. The two tiered time system is the main idea, but there are a lot of smaller and more subtle differences too. As an added bonus, ECL scripts can now use TIME_THRES_MET = 1 to detect specifically the first time requirement, so other patches could build off of that.
+
+Border of Life and Death:
+Completely removed. Instead, last spells are automatically triggered by getting hit during a spellcard (which uses all bomb stocks). Border team's unique ability is being able to activate this at any time regardless of whether a spellcard is active.
 
 Shot Types:
 Reimu:
@@ -100,15 +103,13 @@ Internal Changes that Could Cause Incompatibility:
 -Packed the rank array to be bytes instead of ints because it running into the time array was stupid. (Extra still has a time requirement of 10 because it'd feel wrong to "fix" at this point.)
 -*Completely* rewrote "0x43B936 GameManager::__initialize_rank_by_difficulty" and "0x43C35F __advance_time_by_stage" to make them use the new packed arrays and reduce function size.
 -Inserted a few janky jumps at 0x436E46 and 0x436F0F to properly render the HUD. These changes shouldn't cause any issues, but need to be remembered. These jump to spots where a massive chunk of "0x43C35F __advance_time_by_stage" used to be before it was rewritten.
+-Completely replaced the function at 0x44AB40. This seems to be the one that controls effects on death and the border of life and death. Since that mechanic is now removed, the function is now a LOT smaller.
 
 Internal Changes that Could be Useful:
 -EclIVar TIME_THRES_MET properly outputs a value of 1 when only the first time requirement has been met. This doesn't make any difference with the original ECL files, but could be used by custom ones.
 -"0x43C425 GameManager::get_required_time_orbs_2" is a new function to retrieve the second time requirement from the globals struct. It can be called just like "0x421B80 GameManager::get_required_time_orbs".
 
 TODO:
--Auto-bomb mechanic that uses all your bomb stocks when you hit anything. Because yes that actually existed.
--Once the damage value of each bomb has been found, find that same data in the trials and port the value.
--There are at least a few differences in the ECL scripts, particularly Keine's last word. Need to dump these and get them added.
 -Dump all the other files from the other trials too to look for differences.
 -Figure out WTF is up with Remilia's .sht file so I can write less trash documentation.
 -Write less trash documentation.
@@ -116,9 +117,16 @@ TODO:
 -Proper settings?
 -An actual patch repository?
 -Sleep?
--Rewrite the patch to use codecaves instead of so many raw binhacks?
 -Undoubtedly 10 other things I forgot
 -Like the time item point value difference
+-That fade effect after character selection
+-Adjust time penalty for bombing
+-Figure out the additional code in Reimu's last spell
+-Marisa's last spell and Remilia's bomb/last spell have something weird in their code, idk what yet
+-Yuyuko's last spell has an additional reference to pi in the middle. Not sure why
+
+IN PROGRESS:
+-Rewrite the patch to use codecaves instead of so many raw binhacks
 
 Changelog:
 
@@ -127,3 +135,10 @@ Changelog:
 
 0.02:
 -Attempted to fix a bug where TIME_THRES_MET was returning your current time orb count instead of which threshold had been met because I forgot a MOV EAX,EDX
+
+0.03:
+-Tried again to fix TIME_THRES_MET. Even after adding the MOV EAX,EDX I still didn't actually jump to that line when neither threshold has been met.
+-Added the auto-bomb mechanic. This completely replaces the border between life and death. There's some weird reference to a replay manager though, so it may desync the crap out of everything.
+-Tried just dumping the original trial ECL files into thpatch to see if it replicates the pattern differences. This is probably a horrible idea that'll break things, but it seems to be working so far. (Apparently the ANM indices changed so it all looks terrible. Left the files in but turned off.)
+-Tried to change all the bomb data to match the trials. I don't really know what half of it does though, so it might just break instead. (Seems like it isn't working, so binhacks temporarily disabled)
+-Added a cool custom title screen thing.
